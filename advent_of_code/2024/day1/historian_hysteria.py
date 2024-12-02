@@ -1,5 +1,4 @@
 from advent_of_code.utils import data_reading
-from advent_of_code.utils.data_reading.two_vertical_arrays import TwoVerticalArrays
 
 
 def sort_data(data):
@@ -33,27 +32,27 @@ def get_similarity_score(data):
 
 def historian_hysteria_example_part1():
     data_reader = data_reading.TwoVerticalArrays()
-    data: [[int][int]] = data_reader.get_data("example.txt")
+    data: [[int][int]] = data_reader.get_data("example.txt", int)
     data = sort_data(data)
     sum_of_differences = get_sum_of_differences(data)
     print(sum_of_differences)
 
 def historian_hysteria_part1():
     data_reader = data_reading.TwoVerticalArrays()
-    data: [[int][int]] = data_reader.get_data("real.txt")
+    data: [[int][int]] = data_reader.get_data("real.txt", int)
     data = sort_data(data)
     sum_of_differences = get_sum_of_differences(data)
     print(sum_of_differences)
 
 def historian_hysteria_example_part2():
     data_reader = data_reading.TwoVerticalArrays()
-    data: [[int][int]] = data_reader.get_data("example.txt")
+    data: [[int][int]] = data_reader.get_data("example.txt", int)
     data = sort_data(data)
     print(get_similarity_score(data))
 
 def historian_hysteria_part2():
     data_reader = data_reading.TwoVerticalArrays()
-    data: [[int][int]] = data_reader.get_data("real.txt")
+    data: [[int][int]] = data_reader.get_data("real.txt", int)
     data = sort_data(data)
     print(get_similarity_score(data))
 
