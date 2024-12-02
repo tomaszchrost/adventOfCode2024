@@ -1,3 +1,5 @@
+from copy import copy
+
 from advent_of_code.utils import data_reading
 from math import copysign
 
@@ -12,41 +14,38 @@ class ReportCheck:
     def total_safe_reports(self):
         total = 0
         for report in self.data:
-            total += int(self.is_report_safe(report))
+            if self.allow_bad_level:
+                total += int(self.is_report_safe_allow_bad_value(report))
+            else:
+                total += int(self.is_report_safe(report))
         return total
 
     def are_values_ok(self, a, b, correlation):
         diff = a - b
         abs_diff = abs(diff)
-        if self.min_diff > abs_diff > self.max_diff:
-            return False
-
-
+        return self.min_diff <= abs_diff <= self.max_diff and (correlation == copysign(1, diff) or correlation is None)
 
     def is_report_safe(self, report: [int]) -> bool:
         report_correlation = None
-        bad_level_used = False
         for i in range(1, len(report)):
-            diff = report[i] - report[i - 1]
-            abs_diff = abs(diff)
-            if abs_diff < self.min_diff or abs_diff > self.max_diff:
-                if self.allow_bad_level and not bad_level_used:
-                    bad_level_used = True
-
-                    report.remove(i)
-                else:
-                    return False
-
-            if report_correlation is None:
-                report_correlation = copysign(1, diff)
-            elif report_correlation != copysign(1, diff):
-                if self.allow_bad_level and not bad_level_used:
-                    bad_level_used = True
-                    i = i - 1
-                    report.remove(i)
-                else:
-                    return False
+            if not self.are_values_ok(report[i], report[i - 1], report_correlation):
+                return False
+            report_correlation = copysign(1, report[i] - report[i - 1])
         return True
+
+    def is_report_safe_allow_bad_value(self, report: [int]):
+        if self.is_report_safe(report):
+            print(report, True)
+            return True
+
+        for i in range(0, len(report)):
+            new_report = copy(report)
+            new_report.pop(i)
+            if self.is_report_safe(new_report):
+                print(report, True)
+                return True
+        print(report, False)
+        return False
 
 def run_part1(file):
     data_reader = data_reading.TwoDimensionalArray()
@@ -70,5 +69,8 @@ def part1():
 def example_part2():
     print("Part 2 Example: ", run_part2("example.txt"))
 
+def part2():
+    print("Part 2: ", run_part2("real.txt"))
+
 if __name__=="__main__":
-    part1()
+    part2()
